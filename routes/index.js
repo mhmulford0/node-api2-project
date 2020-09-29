@@ -45,4 +45,20 @@ router.get("/:id/comments", async (req, res) => {
   }
 });
 
+
+router.post("/", async (req, res) => {
+  if (req.body.title || req.body.contents !== undefined) {
+    try {
+      await db.insert({ title: req.body.title, contents: req.body.contents });
+      res.status(201).json({ message: "post added" });
+    } catch (error) {
+      console.log(error);
+    }
+  } else {
+    res.status(400).json({
+      errorMessage: "Please provide title and contents for the post.",
+    });
+  }
+});
+
 module.exports = router;
