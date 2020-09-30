@@ -61,4 +61,54 @@ router.post("/", async (req, res) => {
   }
 });
 
+// router.post("/:id/comments", async (req, res) => {
+//   const { id } = req.params;
+//   try {
+//     const lookupPost = await db.findById(id);
+//     if (lookupPost.length === 1) {
+//       const newComment = await db.update(id, { text: req.body.text });
+//       res.status(201).json({ id: id, data: newComment });
+//     } else {
+//       res
+//         .status(404)
+//         .json({ message: "The post with the specified ID does not exist." });
+//     }
+//   } catch (error) {
+//     console.log(error);
+//   }
+// });
+
+
+router.delete("/:id", async (req, res) => {
+  const {id} = req.params
+  try {
+    const removedPost = await db.remove(id);
+    console.log(removedPost)
+    if (removedPost !== 0) {
+    res.status(200).json({message: 'item removed'})
+    } else {
+      res.status(404).json({message: 'no post with provided ID'})
+    }
+  } catch (error) {
+    console.log(error)
+  }
+  
+})
+
+router.put("/:id", async (req, res) => {
+  const {id} = req.params
+
+  try {
+    const updatedPost = await db.update(id, {contents: req.body.contents})
+
+    if (updatedPost === 1) {
+      res.status(201).json({message: "post updated"})
+    } else {
+      res.status(404).json({message: "post not found"})
+    }
+  } catch (error) {
+    console.log(error)
+  }
+})
+
 module.exports = router;
